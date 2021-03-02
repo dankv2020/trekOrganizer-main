@@ -14,19 +14,19 @@ public class TrekkerService {
     @Autowired
     TrekkerRepository trekkerRepository;
 
-    public List<Trekker> getByFullNameOrEmail(String fullName, String email) {
-
-        return trekkerRepository.findByFullNameOrEmail(fullName, email);
-    }
-
-    public List<Trekker> getByFullNameOrEmailContaining(String search) {
-
-        return trekkerRepository.findByFullNameOrEmailContaining(search, search);
-    }
-
     public List<Trekker> getAllTrekkers() {
 
         return trekkerRepository.findAll();
+    }
+
+    public Trekker getTrekkerById(Long id) {
+
+        return trekkerRepository.findById(id).get();
+    }
+
+    public List<Trekker> getTrekkersByFullNameOrEmailContaining(String query) {
+
+        return trekkerRepository.findByFullNameOrEmailContaining(query, query);
     }
 
     public Trekker createTrekker(TrekkerRequest trekkerRequest) {
@@ -36,10 +36,16 @@ public class TrekkerService {
         return trekker;
     }
 
+    public Trekker updateTrekker(Long id, TrekkerRequest trekkerRequest) {
+        Trekker trekker = trekkerRepository.findById(id).get();
+        //if (trekker == null) System.out.println("No trekker with id = " + id);
 
-    public Trekker getTrekkerById(Long id) {
+        trekker.setFullName(trekkerRequest.getFullName());
+        trekker.setEmail(trekkerRequest.getEmail());
+        trekker.setExperience(trekkerRequest.getExperience());
 
-        return trekkerRepository.getOne(id);
+        trekker = trekkerRepository.save(trekker);
+        return trekker;
     }
 
     public String deleteTrekker(Long id) {
@@ -48,21 +54,9 @@ public class TrekkerService {
         return String.format("Trekker with id = %s has been deleted successfully", id);
     }
 
-    public Integer deleteTrekkerByFullName(String fullName) {
+    public Integer deleteTrekkersByFullName(String fullName) {
 
         return trekkerRepository.deleteByFullName(fullName);
-    }
-
-    public Trekker updateTrekker(Long id, TrekkerRequest trekkerRequest) {
-        Trekker trekker = trekkerRepository.findById(id).get();
-        if (trekker == null) System.out.println("No trekker with id = " + id);
-
-        trekker.setFullName(trekkerRequest.getFullName());
-        trekker.setEmail(trekkerRequest.getEmail());
-        trekker.setExperience(trekkerRequest.getExperience());
-
-        trekker = trekkerRepository.save(trekker);
-        return trekker;
     }
 
 

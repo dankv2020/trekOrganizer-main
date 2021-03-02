@@ -1,6 +1,9 @@
 package org.home.trekOrganizer;
 
+import org.home.trekOrganizer.model.Trek;
+import org.home.trekOrganizer.request.TrekRequest;
 import org.home.trekOrganizer.request.TrekkerRequest;
+import org.home.trekOrganizer.service.TrekService;
 import org.home.trekOrganizer.service.TrekkerService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -16,7 +19,7 @@ public class TrekOrganizerApplication {
 
 
 	@Bean
-	public CommandLineRunner demo(TrekkerService trekkerService){
+	public CommandLineRunner demo(TrekkerService trekkerService, TrekService trekService){
 		return (args)->{
 			System.out.println("test");
 			TrekkerRequest trekkerRequest1 = new TrekkerRequest("John Black","johnblack@gmail.com", 7);
@@ -26,6 +29,17 @@ public class TrekOrganizerApplication {
 			System.out.println(trekkerService.createTrekker(trekkerRequest1));
 			System.out.println(trekkerService.createTrekker(trekkerRequest2));
 			System.out.println(trekkerService.createTrekker(trekkerRequest3));
+
+			/****************************************************************************/
+
+			TrekRequest trekRequest1 = new TrekRequest("Trek1",12,"Just simple trek #1");
+			TrekRequest trekRequest2 = new TrekRequest("Trek2",22,"Just simple trek #2");
+			TrekRequest trekRequest3 = new TrekRequest("Trek3",33,"Just simple trek #3");
+
+			System.out.println(trekService.createTrek(trekRequest1));
+			System.out.println(trekService.createTrek(trekRequest2));
+			System.out.println(trekService.createTrek(trekRequest3));
+
 
 		};
 	}

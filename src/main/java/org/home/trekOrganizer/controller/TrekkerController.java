@@ -31,6 +31,14 @@ public class TrekkerController {
         return new TrekkerResponse(trekker);
     }
 
+    @GetMapping("/search")
+    public List<TrekkerResponse> getTrekkersByFullNameOrEmailContaining(
+            @RequestParam(name = "query") String query) {
+
+        List<Trekker> trekkers = trekkerService.getTrekkersByFullNameOrEmailContaining(query);
+        return getTrekkerResponses(trekkers);
+    }
+
     @PostMapping ("/create")
     public TrekkerResponse createTrekker(@Valid @RequestBody TrekkerRequest trekkerRequest) {
 
@@ -46,35 +54,17 @@ public class TrekkerController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public String deleteTrekker(@PathVariable(name = "id") Long id) {
+    public String deleteTrekkerById(@PathVariable(name = "id") Long id) {
 
         return trekkerService.deleteTrekker(id);
     }
 
     @DeleteMapping("/deleteByFullName")
-    public String deleteTrekkerByFullName(@RequestParam(name = "fullName") String fullName) {
+    public String deleteTrekkersByFullName(@RequestParam(name = "fullName") String fullName) {
 
-        return trekkerService.deleteTrekkerByFullName(fullName) + " Trekker(s) deleted";
+        return trekkerService.deleteTrekkersByFullName(fullName) + " Trekker(s) deleted";
     }
 
-
-
-    @GetMapping("getByFullNameOrEmail")
-    public List<TrekkerResponse> getByFullNameOrEmail(
-            @RequestParam(name = "fullName") String fullName,
-            @RequestParam(name = "email") String email) {
-
-        List<Trekker> trekkers = trekkerService.getByFullNameOrEmail(fullName,email);
-        return getTrekkerResponses(trekkers);
-    }
-
-    @GetMapping("getByFullNameOrEmailContaining")
-    public List<TrekkerResponse> getByFullNameOrEmailContaining(
-            @RequestParam(name = "search") String search) {
-
-        List<Trekker> trekkers = trekkerService.getByFullNameOrEmailContaining(search);
-        return getTrekkerResponses(trekkers);
-    }
 
     private List<TrekkerResponse> getTrekkerResponses(List<Trekker> trekkers) {
         List<TrekkerResponse> trekkerResponses = new ArrayList<>();

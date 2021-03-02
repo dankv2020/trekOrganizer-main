@@ -4,8 +4,14 @@ import lombok.*;
 import org.home.trekOrganizer.request.TrekkerRequest;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
-@Setter @Getter @NoArgsConstructor @AllArgsConstructor @ToString
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 @Entity
 @Table(name = "trekker")
 public class Trekker {
@@ -22,6 +28,10 @@ public class Trekker {
 
     @Column
     private Integer experience;
+
+    //not-owning side
+    @ManyToMany (mappedBy = "trekkers")
+    private List<Journey> journeys = new ArrayList<>();
 
     public Trekker(TrekkerRequest trekkerRequest) {
         this.fullName = trekkerRequest.getFullName();
