@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface TrekkerRepository extends JpaRepository<Trekker, Long> {
 
-    List<Trekker> findByFullNameOrEmailContaining(String fullName, String email);
+    List<Trekker> findByFullNameOrEmailContainingIgnoreCase(String fullName, String email);
 
     @Modifying
     @Transactional

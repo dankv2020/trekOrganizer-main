@@ -32,7 +32,8 @@ public class Trek {
 
     @OneToMany(mappedBy = "trek", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Journey> journeys = new ArrayList<>();
+    private List<Journey> journeys;
+//    = new ArrayList<>();
 
     public Trek(TrekRequest trekRequest) {
         this.name = trekRequest.getName();

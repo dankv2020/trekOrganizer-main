@@ -1,15 +1,19 @@
 package org.home.trekOrganizer;
 
 import org.home.trekOrganizer.model.Trek;
+import org.home.trekOrganizer.request.JourneyRequest;
 import org.home.trekOrganizer.request.TrekRequest;
 import org.home.trekOrganizer.request.TrekkerRequest;
+import org.home.trekOrganizer.service.JourneyService;
 import org.home.trekOrganizer.service.TrekService;
 import org.home.trekOrganizer.service.TrekkerService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+@EnableSwagger2
 @SpringBootApplication
 public class TrekOrganizerApplication {
 
@@ -19,7 +23,7 @@ public class TrekOrganizerApplication {
 
 
 	@Bean
-	public CommandLineRunner demo(TrekkerService trekkerService, TrekService trekService){
+	public CommandLineRunner demo(TrekkerService trekkerService, TrekService trekService, JourneyService journeyService){
 		return (args)->{
 			System.out.println("test");
 			TrekkerRequest trekkerRequest1 = new TrekkerRequest("John Black","johnblack@gmail.com", 7);
@@ -39,6 +43,16 @@ public class TrekOrganizerApplication {
 			System.out.println(trekService.createTrek(trekRequest1));
 			System.out.println(trekService.createTrek(trekRequest2));
 			System.out.println(trekService.createTrek(trekRequest3));
+
+			/****************************************************************************/
+
+			JourneyRequest journeyRequest1 = new JourneyRequest("Journey1");
+			JourneyRequest journeyRequest2 = new JourneyRequest("Journey2");
+			JourneyRequest journeyRequest3 = new JourneyRequest("Journey3");
+
+			System.out.println(journeyService.createJourney(journeyRequest1));
+			System.out.println(journeyService.createJourney(journeyRequest2));
+			System.out.println(journeyService.createJourney(journeyRequest3));
 
 
 		};

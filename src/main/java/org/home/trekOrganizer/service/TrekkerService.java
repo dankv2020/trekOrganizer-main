@@ -26,7 +26,7 @@ public class TrekkerService {
 
     public List<Trekker> getTrekkersByFullNameOrEmailContaining(String query) {
 
-        return trekkerRepository.findByFullNameOrEmailContaining(query, query);
+        return trekkerRepository.findByFullNameOrEmailContainingIgnoreCase(query, query);
     }
 
     public Trekker createTrekker(TrekkerRequest trekkerRequest) {

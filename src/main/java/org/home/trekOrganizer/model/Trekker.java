@@ -31,7 +31,8 @@ public class Trekker {
 
     //not-owning side
     @ManyToMany (mappedBy = "trekkers")
-    private List<Journey> journeys = new ArrayList<>();
+    private List<Journey> journeys;
+//            = new ArrayList<>();
 
     public Trekker(TrekkerRequest trekkerRequest) {
         this.fullName = trekkerRequest.getFullName();

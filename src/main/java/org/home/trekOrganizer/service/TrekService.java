@@ -1,7 +1,6 @@
 package org.home.trekOrganizer.service;
 
 import org.home.trekOrganizer.model.Trek;
-import org.home.trekOrganizer.model.Trekker;
 import org.home.trekOrganizer.repository.TrekRepository;
 import org.home.trekOrganizer.request.TrekRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ public class TrekService {
     }
 
     public List<Trek> getTreksByNameOrDescriptionContaining(String query) {
-        return trekRepository.findByNameOrDescriptionContaining(query, query);
+        return trekRepository.findByNameOrDescriptionContainingIgnoreCase(query, query);
     }
 
     public Trek createTrek(TrekRequest trekRequest){
@@ -50,7 +49,7 @@ public class TrekService {
         return String.format("Trek with id = %s has been deleted successfully", id);
     }
 
-    public Long deleteTreksByName(String name) {
+    public Integer deleteTreksByName(String name) {
         return trekRepository.deleteByName(name);
     }
 }

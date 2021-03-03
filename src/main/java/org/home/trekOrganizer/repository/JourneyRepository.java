@@ -1,6 +1,6 @@
 package org.home.trekOrganizer.repository;
 
-import org.home.trekOrganizer.model.Trek;
+import org.home.trekOrganizer.model.Journey;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
@@ -9,9 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface TrekRepository extends JpaRepository<Trek, Long> {
+public interface JourneyRepository extends JpaRepository<Journey, Long> {
 
-    List<Trek> findByNameOrDescriptionContainingIgnoreCase(String name, String description);
+    List<Journey> findByNameContainingIgnoreCase(String query);
 
     @Modifying
     @Transactional

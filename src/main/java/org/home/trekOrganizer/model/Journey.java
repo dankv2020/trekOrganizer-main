@@ -1,9 +1,7 @@
 package org.home.trekOrganizer.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.home.trekOrganizer.request.JourneyRequest;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -14,6 +12,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Entity
 @Table(name = "journey")
 public class Journey {
@@ -21,6 +20,9 @@ public class Journey {
     @Id
     @GeneratedValue
     private Long id;
+
+    @Column
+    private String name;
 
     @ManyToOne
 //            (cascade = CascadeType.ALL)
@@ -36,4 +38,8 @@ public class Journey {
             joinColumns = @JoinColumn(name = "journey_id"),
             inverseJoinColumns = @JoinColumn(name = "trekker_id"))
     private List<Trekker> trekkers;
+
+    public Journey(JourneyRequest journeyRequest) {
+        this.name = journeyRequest.getName();
+    }
 }
