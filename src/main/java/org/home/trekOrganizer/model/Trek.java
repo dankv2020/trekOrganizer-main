@@ -30,8 +30,7 @@ public class Trek {
     @Column
     private String description;
 
-    @OneToMany(mappedBy = "trek", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "trek", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Journey> journeys;
 //    = new ArrayList<>();
 

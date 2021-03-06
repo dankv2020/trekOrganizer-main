@@ -2,6 +2,7 @@ package org.home.trekOrganizer.controller;
 
 import org.home.trekOrganizer.model.Journey;
 import org.home.trekOrganizer.model.Trek;
+import org.home.trekOrganizer.model.Trekker;
 import org.home.trekOrganizer.request.JourneyRequest;
 import org.home.trekOrganizer.request.TrekRequest;
 import org.home.trekOrganizer.response.JourneyResponse;
@@ -48,14 +49,23 @@ public class JourneyController {
         Journey journey = journeyService.createJourney(journeyRequest);
         return new JourneyResponse(journey);
     }
-//
-//    @PutMapping("/update/{id}")
-//    public TrekResponse updateTrek(@PathVariable Long id, @RequestBody @Valid TrekRequest trekRequest) {
-//
-//        Trek trek = trekService.updateTrek(id, trekRequest);
-//        return new TrekResponse(trek);
-//    }
-//
+
+    @PutMapping("/update/{id}")
+    public JourneyResponse updateJourney(@PathVariable Long id, @RequestBody @Valid JourneyRequest journeyRequest) {
+
+        Journey journey = journeyService.updateJourney(id, journeyRequest);
+        return new JourneyResponse(journey);
+    }
+
+    @PutMapping("/addTrekkers/{id}")
+    public JourneyResponse addTrekkersToJourney(@PathVariable Long id,
+                                                @RequestParam List<Long> trekkerIdList){
+
+        Journey journey = journeyService.addTrekkers(id, trekkerIdList);
+        return new JourneyResponse(journey);
+
+    }
+
     @DeleteMapping("/delete/{id}")
     public String deleteJourney(@PathVariable Long id){
         return journeyService.deleteJourney(id);

@@ -28,7 +28,6 @@ public class Journey {
 //            (cascade = CascadeType.ALL)
 //  (optional = false) //trek must exist
     @JoinColumn(name = "trek_id")
-
     private Trek trek;
 
     //owning side

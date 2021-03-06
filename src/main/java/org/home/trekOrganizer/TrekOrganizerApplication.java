@@ -46,13 +46,15 @@ public class TrekOrganizerApplication {
 
 			/****************************************************************************/
 
-			JourneyRequest journeyRequest1 = new JourneyRequest("Journey1");
-			JourneyRequest journeyRequest2 = new JourneyRequest("Journey2");
-			JourneyRequest journeyRequest3 = new JourneyRequest("Journey3");
+//			Trek trek = new Trek(trekRequest3);
+//
+//			JourneyRequest journeyRequest1 = new JourneyRequest("Journey1", 4L);
+//			JourneyRequest journeyRequest2 = new JourneyRequest("Journey2", 4L);
+//			JourneyRequest journeyRequest3 = new JourneyRequest("Journey3");
 
-			System.out.println(journeyService.createJourney(journeyRequest1));
-			System.out.println(journeyService.createJourney(journeyRequest2));
-			System.out.println(journeyService.createJourney(journeyRequest3));
+//			System.out.println(journeyService.createJourney(journeyRequest1));
+//			System.out.println(journeyService.createJourney(journeyRequest2));
+//			System.out.println(journeyService.createJourney(journeyRequest3));
 
 
 		};
