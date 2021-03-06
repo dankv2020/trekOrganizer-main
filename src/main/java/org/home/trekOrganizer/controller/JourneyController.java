@@ -9,7 +9,9 @@ import org.home.trekOrganizer.response.JourneyResponse;
 import org.home.trekOrganizer.response.TrekResponse;
 import org.home.trekOrganizer.service.JourneyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ public class JourneyController {
     @GetMapping("/")
     public List<JourneyResponse> getAllJourneys() {
         List<Journey> journeys = journeyService.getAllJourneys();
+        if (journeys.size() == 0) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Journeys not found");
         return getJourneyResponses(journeys);
     }
 

@@ -1,5 +1,6 @@
 package org.home.trekOrganizer.service;
 
+import org.home.trekOrganizer.exception.TrekkerNotFoundException;
 import org.home.trekOrganizer.model.Trekker;
 import org.home.trekOrganizer.repository.TrekkerRepository;
 import org.home.trekOrganizer.request.TrekkerRequest;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TrekkerService {
@@ -21,7 +23,17 @@ public class TrekkerService {
 
     public Trekker getTrekkerById(Long id) {
 
-        return trekkerRepository.findById(id).get();
+        Optional<Trekker> optionalTrekker = trekkerRepository.findById(id);
+
+        if (!optionalTrekker.isEmpty()) {
+
+            Trekker trekker = optionalTrekker.get();
+            return trekker;
+        } else {
+
+            throw new TrekkerNotFoundException(id);
+        }
+
     }
 
     public List<Trekker> getTrekkersByFullNameOrEmailContaining(String query) {
@@ -37,21 +49,33 @@ public class TrekkerService {
     }
 
     public Trekker updateTrekker(Long id, TrekkerRequest trekkerRequest) {
-        Trekker trekker = trekkerRepository.findById(id).get();
-        //if (trekker == null) System.out.println("No trekker with id = " + id);
 
-        trekker.setFullName(trekkerRequest.getFullName());
-        trekker.setEmail(trekkerRequest.getEmail());
-        trekker.setExperience(trekkerRequest.getExperience());
+        Optional<Trekker> optionalTrekker = trekkerRepository.findById(id);
 
-        trekker = trekkerRepository.save(trekker);
-        return trekker;
+        if (!optionalTrekker.isEmpty()) {
+            Trekker trekker = optionalTrekker.get();
+
+            trekker.setFullName(trekkerRequest.getFullName());
+            trekker.setEmail(trekkerRequest.getEmail());
+            trekker.setExperience(trekkerRequest.getExperience());
+
+            trekker = trekkerRepository.save(trekker);
+            return trekker;
+        } else {
+            throw new TrekkerNotFoundException(id);
+        }
+
     }
 
     public String deleteTrekker(Long id) {
 
-        trekkerRepository.deleteById(id);
-        return String.format("Trekker with id = %s has been deleted successfully", id);
+        try {
+            trekkerRepository.deleteById(id);
+            return String.format("Trekker with id = %s has been deleted successfully", id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new TrekkerNotFoundException(id);
+        }
     }
 
     public Integer deleteTrekkersByFullName(String fullName) {

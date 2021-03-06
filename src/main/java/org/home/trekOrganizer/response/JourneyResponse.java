@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.home.trekOrganizer.model.Journey;
-import org.home.trekOrganizer.model.Trek;
-import org.home.trekOrganizer.model.Trekker;
 
 import java.util.List;
 import java.util.stream.Collectors;

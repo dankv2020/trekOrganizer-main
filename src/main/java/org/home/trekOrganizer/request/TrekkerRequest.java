@@ -18,16 +18,17 @@ import javax.validation.constraints.NotNull;
 public class TrekkerRequest {
 
     @JsonProperty("full_name")
-    @NotBlank(message = "Full name is required")
+    @NotBlank(message = "full_name is required")
     private String fullName;
 
     @JsonProperty("email")
-    @Email(message = "Email is required")
+    @NotBlank(message = "email is required")
+    @Email(message = "email is incorrect")
     private String email;
 
     @JsonProperty("trekking_experience")
-    @NotNull(message = "Experience is required")
-    @Range(min = 0, max = 99, message = "Experience can be [0..99]")
+    @NotNull(message = "trekking_experience is required")
+    @Range(min = 0, max = 99, message = "trekking_experience can be [0..99]")
 //    @Digits(integer=2, fraction=0, message="Experience can't be more than 99 years )")
     private Integer experience;
 
