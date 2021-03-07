@@ -1,15 +1,14 @@
 package org.home.trekOrganizer.controller;
 
+import org.home.trekOrganizer.exception.ErrorsConverter;
+import org.home.trekOrganizer.exception.ItemNotFoundException;
 import org.home.trekOrganizer.model.Journey;
-import org.home.trekOrganizer.model.Trek;
-import org.home.trekOrganizer.model.Trekker;
 import org.home.trekOrganizer.request.JourneyRequest;
-import org.home.trekOrganizer.request.TrekRequest;
 import org.home.trekOrganizer.response.JourneyResponse;
-import org.home.trekOrganizer.response.TrekResponse;
 import org.home.trekOrganizer.service.JourneyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -34,44 +33,83 @@ public class JourneyController {
     @GetMapping("/{id}")
     public JourneyResponse getJourneyById(@PathVariable Long id){
 
-        Journey journey = journeyService.getJourneyById(id);
-        return new JourneyResponse(journey);
+        try {
+            Journey journey = journeyService.getJourneyById(id);
+            return new JourneyResponse(journey);
+        } catch (ItemNotFoundException exception) {
+
+            exception.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
+
+        }
     }
 
     @GetMapping("/search")
     public List<JourneyResponse> getJourneysByNameContaining(
             @RequestParam(name = "query") String query){
 
+        if (query.isBlank()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "query is required" );
         List<Journey> journeys = journeyService.getJourneysByNameContaining(query);
+        if (journeys.size() == 0)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Journeys not found with query " + query);
         return getJourneyResponses(journeys);
     }
 
     @PostMapping("/create")
-    public JourneyResponse createJourney(@RequestBody @Valid JourneyRequest journeyRequest){
+    public JourneyResponse createJourney(@RequestBody @Valid JourneyRequest journeyRequest, Errors errors){
 
-        Journey journey = journeyService.createJourney(journeyRequest);
-        return new JourneyResponse(journey);
+        if (errors.hasErrors()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorsConverter.getMessage(errors));
+        }
+        try {
+            Journey journey = journeyService.createJourney(journeyRequest);
+            return new JourneyResponse(journey);
+        } catch (ItemNotFoundException exception) {
+            exception.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
+        }
     }
 
     @PutMapping("/update/{id}")
-    public JourneyResponse updateJourney(@PathVariable Long id, @RequestBody @Valid JourneyRequest journeyRequest) {
+    public JourneyResponse updateJourney(@PathVariable Long id, @RequestBody @Valid JourneyRequest journeyRequest, Errors errors) {
 
-        Journey journey = journeyService.updateJourney(id, journeyRequest);
-        return new JourneyResponse(journey);
+        if (errors.hasErrors()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorsConverter.getMessage(errors));
+        }
+
+        try {
+            Journey journey = journeyService.updateJourney(id, journeyRequest);
+            return new JourneyResponse(journey);
+        } catch (ItemNotFoundException exception) {
+            exception.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
+        }
     }
 
     @PutMapping("/addTrekkers/{id}")
     public JourneyResponse addTrekkersToJourney(@PathVariable Long id,
                                                 @RequestParam List<Long> trekkerIdList){
 
-        Journey journey = journeyService.addTrekkers(id, trekkerIdList);
-        return new JourneyResponse(journey);
+        try {
+            Journey journey = journeyService.addTrekkers(id, trekkerIdList);
+            return new JourneyResponse(journey);
+        } catch (ItemNotFoundException exception) {
+
+            exception.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
+        }
 
     }
 
     @DeleteMapping("/delete/{id}")
     public String deleteJourney(@PathVariable Long id){
-        return journeyService.deleteJourney(id);
+
+        try {
+            return journeyService.deleteJourney(id);
+        } catch (ItemNotFoundException exception) {
+            exception.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
+        }
     }
 
     @DeleteMapping("/deleteByName")

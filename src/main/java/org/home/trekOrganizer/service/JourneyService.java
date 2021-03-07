@@ -1,5 +1,6 @@
 package org.home.trekOrganizer.service;
 
+import org.home.trekOrganizer.exception.ItemNotFoundException;
 import org.home.trekOrganizer.model.Journey;
 import org.home.trekOrganizer.model.Trek;
 import org.home.trekOrganizer.model.Trekker;
@@ -8,10 +9,14 @@ import org.home.trekOrganizer.repository.TrekRepository;
 import org.home.trekOrganizer.repository.TrekkerRepository;
 import org.home.trekOrganizer.request.JourneyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class JourneyService {
@@ -20,10 +25,13 @@ public class JourneyService {
     JourneyRepository journeyRepository;
 
     @Autowired
-    TrekRepository trekRepository;
+    TrekService trekService;
 
     @Autowired
     TrekkerRepository trekkerRepository;
+
+    @Autowired
+    TrekkerService trekkerService;
 
     public List<Journey> getAllJourneys() {
 
@@ -32,8 +40,13 @@ public class JourneyService {
     }
 
     public Journey getJourneyById(Long id) {
+        Optional<Journey> optionalJourney = journeyRepository.findById(id);
 
-        return journeyRepository.findById(id).get();
+        if (!optionalJourney.isEmpty()) {
+            return optionalJourney.get();
+        } else {
+            throw new ItemNotFoundException("Journey", id);
+        }
     }
 
     public List<Journey> getJourneysByNameContaining(String query) {
@@ -45,7 +58,8 @@ public class JourneyService {
     public Journey createJourney(JourneyRequest journeyRequest) {
 
         Journey journey = new Journey(journeyRequest);
-        Trek trek = trekRepository.findById(journeyRequest.getTrekId()).get();
+
+        Trek trek = trekService.getTrekById(journeyRequest.getTrekId());
         journey.setTrek(trek);
 
         journey = journeyRepository.save(journey);
@@ -56,38 +70,57 @@ public class JourneyService {
 
     public Journey updateJourney(Long id, JourneyRequest journeyRequest) {
 
-        Journey journey = journeyRepository.findById(id).get();
-        Trek trek = trekRepository.findById(journeyRequest.getTrekId()).get();
+        Optional<Journey> optionalJourney = journeyRepository.findById(id);
 
-        journey.setTrek(trek);
-        journey.setName(journeyRequest.getName());
-        journey = journeyRepository.save(journey);
+        if (!optionalJourney.isEmpty()) {
+            Journey journey = optionalJourney.get();
 
-        return journey;
+            Trek trek = trekService.getTrekById(journeyRequest.getTrekId());
+            journey.setTrek(trek);
+            journey.setName(journeyRequest.getName());
+            journey = journeyRepository.save(journey);
+
+            return journey;
+        } else {
+            throw new ItemNotFoundException("Journey", id);
+        }
     }
 
     public Journey addTrekkers(Long id, List<Long> trekkerIdList) {
 
-        Journey journey = journeyRepository.findById(id).get();
-        Trekker trekker;
+        Optional<Journey> optionalJourney = journeyRepository.findById(id);
 
-        List<Trekker> trekkers = new ArrayList<>();
-        for (Long trekkerId: trekkerIdList) {
-            trekker = trekkerRepository.findById(trekkerId).get();
-            trekkers.add(trekker);
+
+        if (!optionalJourney.isEmpty()) {
+            Journey journey = optionalJourney.get();
+            Trekker trekker;
+
+            List<Trekker> trekkers = new ArrayList<>();
+            for (Long trekkerId : trekkerIdList) {
+                trekker = trekkerService.getTrekkerById(trekkerId);
+                trekkers.add(trekker);
             }
 
-        journey.setTrekkers(trekkers);
-        journey = journeyRepository.save(journey);
+            journey.setTrekkers(trekkers);
+            journey = journeyRepository.save(journey);
 
-        return journey;
+            return journey;
+
+        } else {
+            throw new ItemNotFoundException("Journey", id);
+        }
 
     }
 
     public String deleteJourney(Long id) {
 
-        journeyRepository.deleteById(id);
-        return String.format("Journey with id = %s has been deleted successfully", id);
+        try {
+            journeyRepository.deleteById(id);
+            return String.format("Journey with id = %s has been deleted successfully", id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ItemNotFoundException("Journey", id);
+        }
     }
 
     public Integer deleteJourneysByName(String name) {

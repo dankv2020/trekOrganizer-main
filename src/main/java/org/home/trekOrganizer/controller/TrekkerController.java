@@ -1,7 +1,7 @@
 package org.home.trekOrganizer.controller;
 
 import org.home.trekOrganizer.exception.ErrorsConverter;
-import org.home.trekOrganizer.exception.TrekkerNotFoundException;
+import org.home.trekOrganizer.exception.ItemNotFoundException;
 import org.home.trekOrganizer.model.Trekker;
 import org.home.trekOrganizer.request.TrekkerRequest;
 import org.home.trekOrganizer.response.TrekkerResponse;
@@ -37,7 +37,7 @@ public class TrekkerController {
         try {
             Trekker trekker = trekkerService.getTrekkerById(id);
             return new TrekkerResponse(trekker);
-        } catch (TrekkerNotFoundException exception) {
+        } catch (ItemNotFoundException exception) {
 
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
         }
@@ -47,6 +47,7 @@ public class TrekkerController {
     public List<TrekkerResponse> getTrekkersByFullNameOrEmailContaining(
             @RequestParam(name = "query") String query) {
 
+        if (query.isBlank()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "query is required" );
         List<Trekker> trekkers = trekkerService.getTrekkersByFullNameOrEmailContaining(query);
         if (trekkers.size() == 0)
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Trekkers not found with query = " + query);
@@ -75,7 +76,7 @@ public class TrekkerController {
         try {
             Trekker trekker = trekkerService.updateTrekker(id, trekkerRequest);
             return new TrekkerResponse(trekker);
-        } catch (TrekkerNotFoundException exception) {
+        } catch (ItemNotFoundException exception) {
 
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
         }
@@ -85,7 +86,7 @@ public class TrekkerController {
     public String deleteTrekkerById(@PathVariable(name = "id") Long id) {
         try {
             return trekkerService.deleteTrekker(id);
-        } catch (TrekkerNotFoundException exception) {
+        } catch (ItemNotFoundException exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
         }
 

@@ -16,14 +16,14 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class TrekRequest {
 
-    @NotBlank(message = "Name is required")
+    @NotBlank(message = "name is required")
     private String name;
 
-    @NotNull(message = "Duration is required")
-    @Range(min = 0, max = 49, message = "Duration can be [0..49]")
+    @NotNull(message = "duration is required")
+    @Range(min = 0, max = 49, message = "duration can be [0..49]")
     private Integer duration;
 
-    @NotBlank(message = "Description is required")
+    @NotBlank(message = "description is required")
     private String description;
 
 }

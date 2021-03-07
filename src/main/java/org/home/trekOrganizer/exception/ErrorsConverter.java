@@ -6,10 +6,11 @@ import org.springframework.validation.FieldError;
 public class ErrorsConverter {
     public static String getMessage(Errors errors){
         StringBuilder message = new StringBuilder();
+        message.append("Check JSON: ");
         errors.getAllErrors().stream()
             .forEach(error ->{
-//                       message.append( ((FieldError)error).getField() +": " );
-                        message.append(error.getDefaultMessage()+ "| ");
+//                      message.append( ((FieldError)error).getField() +": " );
+                        message.append(error.getDefaultMessage()+ " | ");
                     });
         return message.toString();
     }

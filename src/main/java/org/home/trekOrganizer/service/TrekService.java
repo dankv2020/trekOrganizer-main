@@ -1,7 +1,6 @@
 package org.home.trekOrganizer.service;
 
-import org.home.trekOrganizer.exception.TrekNotFoundException;
-import org.home.trekOrganizer.exception.TrekkerNotFoundException;
+import org.home.trekOrganizer.exception.ItemNotFoundException;
 import org.home.trekOrganizer.model.Trek;
 import org.home.trekOrganizer.repository.TrekRepository;
 import org.home.trekOrganizer.request.TrekRequest;
@@ -27,7 +26,7 @@ public class TrekService {
 
             return optionalTrek.get();
         } else {
-            throw new TrekNotFoundException(id);
+            throw new ItemNotFoundException("Trek", id);
         }
     }
 
@@ -55,7 +54,7 @@ public class TrekService {
             trek = trekRepository.save(trek);
             return trek;
         } else {
-            throw new TrekNotFoundException(id);
+            throw new ItemNotFoundException("Trek", id);
         }
     }
 
@@ -66,7 +65,7 @@ public class TrekService {
             return String.format("Trek with id = %s has been deleted successfully", id);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new TrekNotFoundException(id);
+            throw new ItemNotFoundException("Trek", id);
         }
     }
 

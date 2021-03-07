@@ -1,7 +1,7 @@
 package org.home.trekOrganizer.controller;
 
 import org.home.trekOrganizer.exception.ErrorsConverter;
-import org.home.trekOrganizer.exception.TrekNotFoundException;
+import org.home.trekOrganizer.exception.ItemNotFoundException;
 import org.home.trekOrganizer.model.Trek;
 import org.home.trekOrganizer.request.TrekRequest;
 import org.home.trekOrganizer.response.TrekResponse;
@@ -36,7 +36,7 @@ public class TrekController {
         try {
             Trek trek = trekService.getTrekById(id);
             return new TrekResponse(trek);
-        } catch (TrekNotFoundException exception) {
+        } catch (ItemNotFoundException exception) {
             exception.printStackTrace();
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
         }
@@ -46,6 +46,7 @@ public class TrekController {
     public List<TrekResponse> getTreksByNameOrDescriptionContaining(
             @RequestParam(name = "query") String query) {
 
+        if (query.isBlank()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "query is required" );
         List<Trek> treks = trekService.getTreksByNameOrDescriptionContaining(query);
         if (treks.size() == 0)
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Treks not found with query = " + query);
@@ -72,7 +73,7 @@ public class TrekController {
         try {
             Trek trek = trekService.updateTrek(id, trekRequest);
             return new TrekResponse(trek);
-        } catch (TrekNotFoundException exception) {
+        } catch (ItemNotFoundException exception) {
 
             exception.printStackTrace();
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
@@ -83,7 +84,7 @@ public class TrekController {
     public String deleteTrek(@PathVariable Long id) {
         try {
             return trekService.deleteTrek(id);
-        } catch (TrekNotFoundException exception) {
+        } catch (ItemNotFoundException exception) {
             exception.printStackTrace();
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
         }
