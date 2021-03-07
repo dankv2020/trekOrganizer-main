@@ -27,8 +27,7 @@ public class TrekkerService {
 
         if (!optionalTrekker.isEmpty()) {
 
-            Trekker trekker = optionalTrekker.get();
-            return trekker;
+            return optionalTrekker.get();
         } else {
 
             throw new TrekkerNotFoundException(id);
