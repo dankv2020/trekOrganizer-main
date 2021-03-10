@@ -19,6 +19,9 @@ public class JourneyResponse {
     @JsonProperty("trek_name")
     private String trekName;
 
+    @JsonProperty
+    private String manager;
+
     @JsonProperty("trekkers")
     private List<String> trekkerNames;
 
@@ -27,6 +30,7 @@ public class JourneyResponse {
         this.id = journey.getId();
         this.name = journey.getName();
         this.trekName = journey.getTrek().getName();
+        this.manager = journey.getManager().getLogin();
 
         if (journey.getTrekkers() != null) {
             this.trekkerNames = journey.getTrekkers().stream().

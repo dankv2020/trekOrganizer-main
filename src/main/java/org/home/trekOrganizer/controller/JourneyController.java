@@ -8,6 +8,7 @@ import org.home.trekOrganizer.response.JourneyResponse;
 import org.home.trekOrganizer.service.JourneyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -56,13 +57,16 @@ public class JourneyController {
     }
 
     @PostMapping("/create")
-    public JourneyResponse createJourney(@RequestBody @Valid JourneyRequest journeyRequest, Errors errors){
+    public JourneyResponse createJourney(@RequestBody @Valid JourneyRequest journeyRequest, Errors errors, Authentication authentication){
 
         if (errors.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorsConverter.getMessage(errors));
         }
         try {
-            Journey journey = journeyService.createJourney(journeyRequest);
+
+            String currentManager = authentication.getName();
+
+            Journey journey = journeyService.createJourney(journeyRequest, currentManager);
             return new JourneyResponse(journey);
         } catch (ItemNotFoundException exception) {
             exception.printStackTrace();
@@ -71,14 +75,16 @@ public class JourneyController {
     }
 
     @PutMapping("/update/{id}")
-    public JourneyResponse updateJourney(@PathVariable Long id, @RequestBody @Valid JourneyRequest journeyRequest, Errors errors) {
+    public JourneyResponse updateJourney(@PathVariable Long id, @RequestBody @Valid JourneyRequest journeyRequest, Errors errors,
+                                         Authentication authentication) {
 
         if (errors.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorsConverter.getMessage(errors));
         }
 
         try {
-            Journey journey = journeyService.updateJourney(id, journeyRequest);
+            String currentManager = authentication.getName();
+            Journey journey = journeyService.updateJourney(id, journeyRequest, currentManager);
             return new JourneyResponse(journey);
         } catch (ItemNotFoundException exception) {
             exception.printStackTrace();

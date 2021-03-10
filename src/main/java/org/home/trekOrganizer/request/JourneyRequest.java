@@ -17,13 +17,15 @@ import javax.validation.constraints.NotNull;
 
 public class JourneyRequest {
 
-    @NotBlank(message = "Name is required")
+    @NotBlank(message = "name is required")
     private String name;
 
     @JsonProperty("trek_id")
-    @NotNull(message = "Trek ID is required")
+    @NotNull(message = "trek_id is required")
     private Long trekId;
 
+    @JsonProperty("manager_id")
+    private Long managerId;
 
 
 //    public JourneyRequest(@NotNull(message = "Name is required") String name) {

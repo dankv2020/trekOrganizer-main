@@ -25,6 +25,10 @@ public class Journey {
     private String name;
 
     @ManyToOne
+    @JoinColumn(name = "manager_id")
+    private Manager manager;
+
+    @ManyToOne
 //            (cascade = CascadeType.ALL)
 //  (optional = false) //trek must exist
     @JoinColumn(name = "trek_id")

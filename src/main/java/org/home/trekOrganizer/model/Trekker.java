@@ -4,7 +4,6 @@ import lombok.*;
 import org.home.trekOrganizer.request.TrekkerRequest;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Setter

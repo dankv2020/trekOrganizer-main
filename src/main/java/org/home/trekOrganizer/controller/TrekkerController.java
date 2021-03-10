@@ -1,5 +1,6 @@
 package org.home.trekOrganizer.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.home.trekOrganizer.exception.ErrorsConverter;
 import org.home.trekOrganizer.exception.ItemNotFoundException;
 import org.home.trekOrganizer.model.Trekker;
@@ -16,6 +17,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/trekkers/")
 public class TrekkerController {
@@ -26,8 +28,13 @@ public class TrekkerController {
     @GetMapping("/")
     public List<TrekkerResponse> getAllTrekkers() {
 
+        log.info("getAllTrekkers");
         List<Trekker> trekkers = trekkerService.getAllTrekkers();
-        if (trekkers.size() == 0) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Trekkers not found");
+        if (trekkers.size() == 0) {
+            log.info("Trekkers not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Trekkers not found");
+        }
+        log.info("Found {} trekker(s)", trekkers.size());
         return getTrekkerResponses(trekkers);
     }
 

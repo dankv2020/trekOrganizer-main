@@ -2,18 +2,14 @@ package org.home.trekOrganizer.service;
 
 import org.home.trekOrganizer.exception.ItemNotFoundException;
 import org.home.trekOrganizer.model.Journey;
+import org.home.trekOrganizer.model.Manager;
 import org.home.trekOrganizer.model.Trek;
 import org.home.trekOrganizer.model.Trekker;
 import org.home.trekOrganizer.repository.JourneyRepository;
-import org.home.trekOrganizer.repository.TrekRepository;
-import org.home.trekOrganizer.repository.TrekkerRepository;
 import org.home.trekOrganizer.request.JourneyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,10 +24,10 @@ public class JourneyService {
     TrekService trekService;
 
     @Autowired
-    TrekkerRepository trekkerRepository;
+    TrekkerService trekkerService;
 
     @Autowired
-    TrekkerService trekkerService;
+    ManagerService managerService;
 
     public List<Journey> getAllJourneys() {
 
@@ -55,12 +51,25 @@ public class JourneyService {
         return journeys;
     }
 
-    public Journey createJourney(JourneyRequest journeyRequest) {
+    public Journey createJourney(JourneyRequest journeyRequest, String currentManager) {
 
+        Manager manager = null;
         Journey journey = new Journey(journeyRequest);
 
         Trek trek = trekService.getTrekById(journeyRequest.getTrekId());
         journey.setTrek(trek);
+
+
+        if (journeyRequest.getManagerId() != null ) {
+
+            manager = managerService.getManagerById(journeyRequest.getManagerId());
+
+        } else { //get Manager from currentSession
+            manager = managerService.getManagerByLogin(currentManager);
+
+        }
+
+        journey.setManager(manager);
 
         journey = journeyRepository.save(journey);
 
@@ -68,7 +77,7 @@ public class JourneyService {
 
     }
 
-    public Journey updateJourney(Long id, JourneyRequest journeyRequest) {
+    public Journey updateJourney(Long id, JourneyRequest journeyRequest, String currentManager) {
 
         Optional<Journey> optionalJourney = journeyRepository.findById(id);
 
@@ -78,6 +87,17 @@ public class JourneyService {
             Trek trek = trekService.getTrekById(journeyRequest.getTrekId());
             journey.setTrek(trek);
             journey.setName(journeyRequest.getName());
+            Manager manager;
+            if (journeyRequest.getManagerId() != null ) {
+
+                manager = managerService.getManagerById(journeyRequest.getManagerId());
+
+            } else { //get Manager from currentSession
+                manager = managerService.getManagerByLogin(currentManager);
+
+            }
+            journey.setManager(manager);
+
             journey = journeyRepository.save(journey);
 
             return journey;

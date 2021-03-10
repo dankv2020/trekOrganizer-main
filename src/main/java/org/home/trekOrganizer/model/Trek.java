@@ -39,15 +39,4 @@ public class Trek {
         this.description = trekRequest.getDescription();
     }
 
-    /*public Trek addJourney(Journey journey) {
-        journeys.add(journey);
-        journey.setTrek(this);
-        return this;
-    }
-
-    public Trek removeJourney(Journey journey) {
-        journeys.remove(journey);
-        journey.setTrek(null);
-        return this;
-    }*/
 }
